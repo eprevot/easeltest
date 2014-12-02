@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
+    <script>
+		var KEYCODE_UP = 38;		//usefull keycode
+		var KEYCODE_LEFT = 37;		//usefull keycode
+		var KEYCODE_RIGHT = 39;		//usefull keycode
+        var KEYCODE_DOWN = 40;
+
+        var currentKeyH;
+        var currentKeyV;
+        var circle;
+        var square;
+	    var stage;
+
+	    document.onkeydown = handleKeyDown;
+		document.onkeyup = handleKeyUp;
+
+        function init() {
+            stage = new createjs.Stage("demoCanvas");
+
+            circle = addCircle(200, 100, 50, stage);
+            square = addSquare(200, 150, 50, stage);
+
+			createjs.Ticker.addEventListener("tick", tick);
+			createjs.Ticker.setFPS(40);
+        }
+
+        function handleKeyDown(event){
+            if(event.keyCode == KEYCODE_LEFT || event.keyCode == KEYCODE_RIGHT) {
+                currentKeyH = event.keyCode;
+            }
+            else if(event.keyCode == KEYCODE_DOWN || event.keyCode == KEYCODE_UP) {
+                currentKeyV= event.keyCode;
+            }   
+        }
+
+        function handleKeyUp(event){
+            if(currentKeyV == event.keyCode) {
+                currentKeyV = null;
+            }
+            if(currentKeyH == event.keyCode) {            
+                currentKeyH = null;
+            }
+        }
+
+        function addCircle(x, y, radius, parent) {
+        	var circle = new createjs.Shape();
+			circle.graphics.beginFill("red").drawCircle(0, 0, radius);
+			circle.x = x;
+			circle.y = y;
+			parent.addChild(circle);
+
+			return circle;
+        }
+       
+        function addSquare(x, y, length, parent) {
+            var square = new createjs.Shape();
+            square.graphics.beginFill("blue").drawRect(x, y, length, length);
+            parent.addChild(square);
+
+            return square;
+        }
+
+        function tick(event) {
+        	var delta = event.delta;
+
+   			moveCircleH(delta);
+
+            moveSquare(currentKeyH, currentKeyV, delta);
+			// TODO
+			// move square with keyboard
+			// move background in opposite direction
+			// hittest on edge of canvas
+			// replace square with spritesheet animation
+
+        	stage.update();
+        }
+
+        function moveCircleH(delta) {
+        	if(circle.x - 50 < stage.canvas.width) {
+	        	circle.x += delta/1000 * 20;
+        	}
+        	else {
+        		circle.x = -50;
+        	}
+        }
+
+        function moveSquare(x,y, delta) {
+            if(currentKeyH == KEYCODE_RIGHT) {
+                square.x += delta/1000 * 100;
+            }
+            else if(currentKeyH == KEYCODE_LEFT){
+                square.x -= delta/1000 * 100;
+            } 
+            if(currentKeyV == KEYCODE_UP) {
+                square.y -= delta/1000 * 100;
+            }
+            else if(currentKeyV == KEYCODE_DOWN){
+                square.y += delta/1000 * 100;
+            } 
+        }
+    </script>
+</head>
+<body onLoad="init();">
+    <canvas id="demoCanvas" width="500" height="300" style="border: 1px solid">
+        alternate content
+    </canvas>
+</body>
+</html>

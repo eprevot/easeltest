@@ -57,7 +57,9 @@
        
         function addSquare(x, y, length, parent) {
             var square = new createjs.Shape();
-            square.graphics.beginFill("blue").drawRect(x, y, length, length);
+            square.graphics.beginFill("blue").drawRect(0, 0, length, length);
+            square.x = x;
+            square.y = y;
             parent.addChild(square);
 
             return square;
@@ -70,9 +72,8 @@
 
             moveSquare(currentKeyH, currentKeyV, delta);
 			// TODO
-			// move square with keyboard
-			// move background in opposite direction
-			// hittest on edge of canvas
+			// hittest on red square
+            // move background in opposite direction
 			// replace square with spritesheet animation
 
         	stage.update();
@@ -88,16 +89,20 @@
         }
 
         function moveSquare(x,y, delta) {
-            if(currentKeyH == KEYCODE_RIGHT) {
+            if(currentKeyH == KEYCODE_RIGHT
+                && square.x + 50 < stage.canvas.width) {
                 square.x += delta/1000 * 100;
             }
-            else if(currentKeyH == KEYCODE_LEFT){
+            else if(currentKeyH == KEYCODE_LEFT
+                && square.x > 0){
                 square.x -= delta/1000 * 100;
             } 
-            if(currentKeyV == KEYCODE_UP) {
+            if(currentKeyV == KEYCODE_UP
+                && square.y > 0) {
                 square.y -= delta/1000 * 100;
             }
-            else if(currentKeyV == KEYCODE_DOWN){
+            else if(currentKeyV == KEYCODE_DOWN
+                && square.y + 50 < stage.canvas.height){
                 square.y += delta/1000 * 100;
             } 
         }

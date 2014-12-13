@@ -13,19 +13,47 @@
         var circle;
         var square;
 	    var stage;
+        var bgs;
+        var canvas;
+        var bgImg;
 
 	    document.onkeydown = handleKeyDown;
 		document.onkeyup = handleKeyUp;
 
         function init() {
-            stage = new createjs.Stage("demoCanvas");
 
+            canvas = document.getElementById("canvas");
+            fullWindow(canvas);
+
+            loadAssets();
+        }
+
+        function loadAssets()
+        {
+            bgImg = new Image();
+            bgImg.onload = initDraw;
+            bgImg.src = 'assets/background.jpg';
+        }
+
+        function initDraw()
+        {            
+            stage = new createjs.Stage("canvas");
+
+            bgs = addBackgrounds(stage);
             circle = addCircle(200, 100, 50, stage);
             square = addSquare(200, 150, 50, stage);
 
-			createjs.Ticker.addEventListener("tick", tick);
-			createjs.Ticker.setFPS(40);
+
+            createjs.Ticker.addEventListener("tick", tick);
+            createjs.Ticker.setFPS(40);
+
         }
+
+        function fullWindow(canvas) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+         }
+
 
         function handleKeyDown(event){
             if(event.keyCode == KEYCODE_LEFT || event.keyCode == KEYCODE_RIGHT) {
@@ -43,6 +71,24 @@
             if(currentKeyH == event.keyCode) {            
                 currentKeyH = null;
             }
+        }
+
+        function addBackgrounds(parent)
+        {
+            
+            bgs = [];
+            var numBG = Math.ceil(canvas.width/bgImg.width) +1;
+            for (var i = 0; i < numBG; i++) {
+                bgs.push(new createjs.Bitmap(bgImg));
+                bgs[i].x = i*bgImg.width;
+                bgs[i].y = canvas.height - bgImg.height;
+                parent.addChildAt(bgs[i], i);
+            };
+            //bg.scaleX = 3;
+            //bg.scaleY = 3;
+            //bg.sourceRect = { x:0, y:0, width:canvas.width, height:canvas.height };
+
+            return bgs;
         }
 
         function addCircle(x, y, radius, parent) {
@@ -71,6 +117,8 @@
    			moveCircleH(delta);
 
             moveSquare(currentKeyH, currentKeyV, delta);
+
+            moveBackground(currentKeyH, delta);
 			// TODO
 			// hittest on red square
             // move background in opposite direction
@@ -106,11 +154,32 @@
                 square.y += delta/1000 * 100;
             } 
         }
+
+        function moveBackground(x, delta)
+        {
+            var decalX = 0;
+            if(currentKeyH == KEYCODE_RIGHT) {
+                decalX = -delta/400 * 100;
+            }
+            else if(currentKeyH == KEYCODE_LEFT){
+                decalX = delta/400 * 100;
+            }
+
+            for (var i = bgs.length - 1; i >= 0; i--) {
+                bgs[i].x += decalX;
+                if (decalX < 0 && bgs[i].x < -bgImg.width) {
+                    bgs[i].x += bgs.length * bgImg.width;
+                }
+                else if(decalX > 0 && bgs[i].x > canvas.width) {
+                    bgs[i].x -= bgs.length * bgImg.width;
+                }
+            };
+        }
     </script>
 </head>
 <body onLoad="init();">
-    <canvas id="demoCanvas" width="500" height="300" style="border: 1px solid">
-        alternate content
+    <canvas id="canvas" width="500" height="300" style="top: 0px; left: 0px; position: absolute;">
+        Go get a new browser, you cheesy ;)
     </canvas>
 </body>
 </html>

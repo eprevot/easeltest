@@ -75,15 +75,14 @@
 
         function addBackgrounds(parent)
         {
-            
             bgs = [];
             var numBG = Math.ceil(canvas.width/bgImg.width) +1;
             for (var i = 0; i < numBG; i++) {
                 bgs.push(new createjs.Bitmap(bgImg));
-                bgs[i].x = i*bgImg.width;
+                bgs[i].x = i*(bgImg.width -1);
                 bgs[i].y = canvas.height - bgImg.height;
                 parent.addChildAt(bgs[i], i);
-            };
+            }
             //bg.scaleX = 3;
             //bg.scaleY = 3;
             //bg.sourceRect = { x:0, y:0, width:canvas.width, height:canvas.height };
@@ -168,17 +167,22 @@
             for (var i = bgs.length - 1; i >= 0; i--) {
                 bgs[i].x += decalX;
                 if (decalX < 0 && bgs[i].x < -bgImg.width) {
-                    bgs[i].x += bgs.length * bgImg.width;
+                    bgs[i].x += bgs.length * (bgImg.width -1);
+                    stage.removeChild(bgs[i]);
+                    stage.addChildAt(bgs[i], bgs.length -1);
                 }
                 else if(decalX > 0 && bgs[i].x > canvas.width) {
-                    bgs[i].x -= bgs.length * bgImg.width;
+                    bgs[i].x -= bgs.length * (bgImg.width -1);
+                    stage.removeChild(bgs[i]);
+                    stage.addChildAt(bgs[i], 0);
                 }
-            };
+            }
         }
     </script>
 </head>
 <body onLoad="init();">
-    <canvas id="canvas" width="500" height="300" style="top: 0px; left: 0px; position: absolute;">
+    <canvas id="canvas" w;oijawef
+    idth="500" height="300" style="top: 0px; left: 0px; position: absolute;">
         Go get a new browser, you cheesy ;)
     </canvas>
 </body>

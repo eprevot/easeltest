@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
+    <script type="text/javascript" src="js/background.js"></script>
     <script>
 		var KEYCODE_UP = 38;		//usefull keycode
 		var KEYCODE_LEFT = 37;		//usefull keycode
@@ -13,9 +14,8 @@
         var circle;
         var square;
 	    var stage;
-        var bgs;
         var canvas;
-        var bgImg;
+        var bg;
 
 	    document.onkeydown = handleKeyDown;
 		document.onkeyup = handleKeyUp;
@@ -24,29 +24,13 @@
 
             canvas = document.getElementById("canvas");
             fullWindow(canvas);
-
-            loadAssets();
-        }
-
-        function loadAssets()
-        {
-            bgImg = new Image();
-            bgImg.onload = initDraw;
-            bgImg.src = 'assets/background.jpg';
-        }
-
-        function initDraw()
-        {            
             stage = new createjs.Stage("canvas");
 
-            bgs = addBackgrounds(stage);
-            circle = addCircle(200, 100, 50, stage);
-            square = addSquare(200, 150, 50, stage);
-
+            bg = new Background('assets/background.jpg', canvas.width, canvas.height);
+            bg.draw(stage);
 
             createjs.Ticker.addEventListener("tick", tick);
             createjs.Ticker.setFPS(40);
-
         }
 
         function fullWindow(canvas) {
@@ -73,22 +57,6 @@
             }
         }
 
-        function addBackgrounds(parent)
-        {
-            bgs = [];
-            var numBG = Math.ceil(canvas.width/bgImg.width) +1;
-            for (var i = 0; i < numBG; i++) {
-                bgs.push(new createjs.Bitmap(bgImg));
-                bgs[i].x = i*(bgImg.width -1);
-                bgs[i].y = canvas.height - bgImg.height;
-                parent.addChildAt(bgs[i], i);
-            }
-            //bg.scaleX = 3;
-            //bg.scaleY = 3;
-            //bg.sourceRect = { x:0, y:0, width:canvas.width, height:canvas.height };
-
-            return bgs;
-        }
 
         function addCircle(x, y, radius, parent) {
         	var circle = new createjs.Shape();
@@ -112,17 +80,7 @@
 
         function tick(event) {
         	var delta = event.delta;
-
-   			moveCircleH(delta);
-
-            moveSquare(currentKeyH, currentKeyV, delta);
-
-            moveBackground(currentKeyH, delta);
-			// TODO
-			// hittest on red square
-            // move background in opposite direction
-			// replace square with spritesheet animation
-
+            moveBackground(delta);
         	stage.update();
         }
 
@@ -154,7 +112,7 @@
             } 
         }
 
-        function moveBackground(x, delta)
+        function moveBackground(delta)
         {
             var decalX = 0;
             if(currentKeyH == KEYCODE_RIGHT) {
@@ -164,25 +122,12 @@
                 decalX = delta/400 * 100;
             }
 
-            for (var i = bgs.length - 1; i >= 0; i--) {
-                bgs[i].x += decalX;
-                if (decalX < 0 && bgs[i].x < -bgImg.width) {
-                    bgs[i].x += bgs.length * (bgImg.width -1);
-                    stage.removeChild(bgs[i]);
-                    stage.addChildAt(bgs[i], bgs.length -1);
-                }
-                else if(decalX > 0 && bgs[i].x > canvas.width) {
-                    bgs[i].x -= bgs.length * (bgImg.width -1);
-                    stage.removeChild(bgs[i]);
-                    stage.addChildAt(bgs[i], 0);
-                }
-            }
+            bg.move(decalX);
         }
     </script>
 </head>
 <body onLoad="init();">
-    <canvas id="canvas" w;oijawef
-    idth="500" height="300" style="top: 0px; left: 0px; position: absolute;">
+    <canvas id="canvas" width="500" height="300" style="top: 0px; left: 0px; position: absolute;">
         Go get a new browser, you cheesy ;)
     </canvas>
 </body>

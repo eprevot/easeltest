@@ -1,0 +1,24 @@
+{
+    "scenario": {
+        "school": {
+        	"x" : "1000",
+        	"text" : "school blabalbla"
+        },
+        "job1": {
+        	"x" : "2000",
+        	"text" : "axway tructructruc"
+        },
+        "job2": {
+        	"x" : "3000",
+        	"text" : "edunovo pouetpouetpouet"
+        },
+        "extras" : {
+        	"x" : "3500",
+        	"text" : "sport tototototo"
+        },
+        "future" : {
+        	"x" : "4200",
+        	"text" : "who knows ??????"
+        }
+    }
+}

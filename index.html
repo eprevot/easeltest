@@ -3,32 +3,29 @@
 <head>
     <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
     <script type="text/javascript" src="js/background.js"></script>
+    <script type="text/javascript" src="js/keyboard.js"></script>
     <script>
-		var KEYCODE_UP = 38;		//usefull keycode
-		var KEYCODE_LEFT = 37;		//usefull keycode
-		var KEYCODE_RIGHT = 39;		//usefull keycode
-        var KEYCODE_DOWN = 40;
-
-        var currentKeyH;
-        var currentKeyV;
         var circle;
         var square;
 	    var stage;
         var canvas;
         var bg;
-
-	    document.onkeydown = handleKeyDown;
-		document.onkeyup = handleKeyUp;
+		var keyManager;
+		//var square;
 
         function init() {
 
             canvas = document.getElementById("canvas");
             fullWindow(canvas);
-            stage = new createjs.Stage("canvas");
 
+            keyManager = new KeyboardManager(document);
+            
             bg = new Background('assets/background.jpg', canvas.width, canvas.height);
+            stage = new createjs.Stage("canvas");
             bg.draw(stage);
 
+            //square = addSquare(10, 10, 100, stage);
+            
             createjs.Ticker.addEventListener("tick", tick);
             createjs.Ticker.setFPS(40);
         }
@@ -37,26 +34,6 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
          }
-
-
-        function handleKeyDown(event){
-            if(event.keyCode == KEYCODE_LEFT || event.keyCode == KEYCODE_RIGHT) {
-                currentKeyH = event.keyCode;
-            }
-            else if(event.keyCode == KEYCODE_DOWN || event.keyCode == KEYCODE_UP) {
-                currentKeyV= event.keyCode;
-            }   
-        }
-
-        function handleKeyUp(event){
-            if(currentKeyV == event.keyCode) {
-                currentKeyV = null;
-            }
-            if(currentKeyH == event.keyCode) {            
-                currentKeyH = null;
-            }
-        }
-
 
         function addCircle(x, y, radius, parent) {
         	var circle = new createjs.Shape();
@@ -80,7 +57,8 @@
 
         function tick(event) {
         	var delta = event.delta;
-            moveBackground(delta);
+        	bg.move(delta, keyManager);
+            //moveSquare(delta);
         	stage.update();
         }
 
@@ -93,37 +71,21 @@
         	}
         }
 
-        function moveSquare(x,y, delta) {
-            if(currentKeyH == KEYCODE_RIGHT
-                && square.x + 50 < stage.canvas.width) {
+        function moveSquare(delta) {
+            if(keyManager.isRight() && square.x + 50 < stage.canvas.width) {
                 square.x += delta/1000 * 100;
             }
-            else if(currentKeyH == KEYCODE_LEFT
-                && square.x > 0){
+            else if(keyManager.isLeft() && square.x > 0){
                 square.x -= delta/1000 * 100;
             } 
-            if(currentKeyV == KEYCODE_UP
-                && square.y > 0) {
+            if(keyManager.isUp() && square.y > 0) {
                 square.y -= delta/1000 * 100;
             }
-            else if(currentKeyV == KEYCODE_DOWN
-                && square.y + 50 < stage.canvas.height){
+            else if(keyManager.isDown() && square.y + 50 < stage.canvas.height){
                 square.y += delta/1000 * 100;
             } 
         }
 
-        function moveBackground(delta)
-        {
-            var decalX = 0;
-            if(currentKeyH == KEYCODE_RIGHT) {
-                decalX = -delta/400 * 100;
-            }
-            else if(currentKeyH == KEYCODE_LEFT){
-                decalX = delta/400 * 100;
-            }
-
-            bg.move(decalX);
-        }
     </script>
 </head>
 <body onLoad="init();">

@@ -12,6 +12,8 @@ function Background(tileSrc, width, height) {
 	this.move = move;
 }
 
+var SPEED = 0.25;
+
 function draw(parent) {
 	this.loadTile();
 	this.parent = parent;
@@ -36,7 +38,15 @@ function initTiles() {
     //this.sourceRect = { x:0, y:0, width:this.width, height:this.height };
 }
         
-function move(decalX) {
+function move(delta, keyManager) {
+    var decalX = 0;
+    if(keyManager.isRight()) {
+        decalX = -SPEED * delta;
+    }
+    else if(keyManager.isLeft()){
+        decalX = SPEED * delta;
+    }
+
     for (var i = this.tiles.length - 1; i >= 0; i--) {
         this.tiles[i].x += decalX;
         if (decalX < 0 && this.tiles[i].x < -this.img.width) {

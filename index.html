@@ -4,24 +4,29 @@
     <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
     <script type="text/javascript" src="js/background.js"></script>
     <script type="text/javascript" src="js/keyboard.js"></script>
+    <script type="text/javascript" src="js/character.js"></script>
     <script>
         var circle;
         var square;
 	    var stage;
         var canvas;
         var bg;
+        var character;
 		var keyManager;
 
         function init() {
 
             canvas = document.getElementById("canvas");
+            stage = new createjs.Stage("canvas");
             fullWindow(canvas);
 
             keyManager = new KeyboardManager(document);
             
             bg = new Background('assets/background.jpg', canvas.width, canvas.height);
-            stage = new createjs.Stage("canvas");
             bg.draw(stage);
+
+            character = new Character('assets/MonsterARun.png');
+            character.draw(stage);
 
             //square = addSquare(10, 10, 100, stage);
             

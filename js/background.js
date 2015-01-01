@@ -8,16 +8,14 @@ function Background(tileSrc, width, height) {
 
 	this.loadTile = loadTile;
 	this.initTiles = initTiles;
-	this.draw = draw;
+	this.draw = function(parent) {
+        this.loadTile();
+        this.parent = parent;
+    };
 	this.move = move;
 }
 
 var SPEED = 0.25;
-
-function draw(parent) {
-	this.loadTile();
-	this.parent = parent;
-}
 
 function loadTile() {
     this.img.addEventListener("load", this.initTiles.bind(this));

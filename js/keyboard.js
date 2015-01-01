@@ -1,6 +1,6 @@
 function KeyboardManager(document) {
-	this.currentKeyH = null;
-	
+	this.currentKeyH = [];
+
 	this.handleKeyDown = handleKeyDown;
 	this.handleKeyUp = handleKeyUp;
 	this.isLeft = isLeft;
@@ -19,19 +19,19 @@ var KEYCODE_DOWN = 40;
 
 function handleKeyDown(event){
     if(event.keyCode == KEYCODE_LEFT || event.keyCode == KEYCODE_RIGHT) {
-        this.currentKeyH = event.keyCode;
+        this.currentKeyH.prepend(event.keyCode);
     }
     else if(event.keyCode == KEYCODE_DOWN || event.keyCode == KEYCODE_UP) {
         this.currentKeyV= event.keyCode;
-    }   
+    }
 }
 
 function handleKeyUp(event){
     if(this.currentKeyV == event.keyCode) {
     	this.currentKeyV = null;
     }
-    if(this.currentKeyH == event.keyCode) {            
-    	this.currentKeyH = null;
+    if(event.keyCode == KEYCODE_LEFT || event.keyCode == KEYCODE_RIGHT) {            
+    	this.currentKeyH.splice(this.currentKeyH.indexOf(event.keyCode)) = null;
     }
 }
 

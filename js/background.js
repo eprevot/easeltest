@@ -5,24 +5,21 @@ function Background(tileSrc, width, height) {
 	this.width = width;
 	this.height = height;
 	this.parent = null;
-
-	this.loadTile = loadTile;
-	this.initTiles = initTiles;
-	this.draw = function(parent) {
-        this.loadTile();
-        this.parent = parent;
-    };
-	this.move = move;
 }
 
-var SPEED = 0.25;
+Background.prototype.SPEED = 0.25;
 
-function loadTile() {
+Background.prototype.draw = function(parent) {
+    this.loadTile();
+    this.parent = parent;
+};
+
+Background.prototype.loadTile = function () {
     this.img.addEventListener("load", this.initTiles.bind(this));
     this.img.src = this.tileSrc;
-}
+};
  
-function initTiles() {
+Background.prototype.initTiles = function () {
     var numBG = Math.ceil(this.width/this.img.width) +1;
     for (var i = 0; i < numBG; i++) {
         this.tiles.push(new createjs.Bitmap(this.img));
@@ -34,9 +31,9 @@ function initTiles() {
     //this.scaleX = 3;
     //this.scaleY = 3;
     //this.sourceRect = { x:0, y:0, width:this.width, height:this.height };
-}
+};
         
-function move(delta, keyManager) {
+Background.prototype.move = function (delta, keyManager) {
     var decalX = 0;
     if(keyManager.isRight()) {
         decalX = -SPEED * delta;
@@ -58,4 +55,4 @@ function move(delta, keyManager) {
             this.parent.addChildAt(this.tiles[i], 0);
         }
     }
-}
+};
